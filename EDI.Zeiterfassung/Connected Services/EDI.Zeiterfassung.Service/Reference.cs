@@ -975,7 +975,7 @@ namespace EDI.Zeiterfassung.Service
         [System.ServiceModel.OperationContractAttribute(Action="http://WHEDI1/PersonalDataExchange/PersonalDataProvider/getPersonalRequest", ReplyAction="http://WHEDI1/PersonalDataExchange/PersonalDataProvider/getPersonalResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(Style=System.ServiceModel.OperationFormatStyle.Document, SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="getPersonal")]
-        System.Threading.Tasks.Task<EDI.Zeiterfassung.Service.personal> getPersonalAsync(int btrm, long pern);
+        System.Threading.Tasks.Task<EDI.Zeiterfassung.Service.personal> getPersonalAsync(int btrm, int pern);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://WHEDI1/PersonalDataExchange/PersonalDataProvider/getPersonalListRequest", ReplyAction="http://WHEDI1/PersonalDataExchange/PersonalDataProvider/getPersonalListResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(Style=System.ServiceModel.OperationFormatStyle.Document, SupportFaults=true)]
@@ -1096,7 +1096,7 @@ namespace EDI.Zeiterfassung.Service
         {
         }
         
-        public System.Threading.Tasks.Task<EDI.Zeiterfassung.Service.personal> getPersonalAsync(int btrm, long pern)
+        public System.Threading.Tasks.Task<EDI.Zeiterfassung.Service.personal> getPersonalAsync(int btrm, int pern)
         {
             return base.Channel.getPersonalAsync(btrm, pern);
         }
