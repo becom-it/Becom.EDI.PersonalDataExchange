@@ -1,10 +1,6 @@
-﻿using EDI.Zeiterfassung.Model.Enums;
-using EDI.Zeiterfassung.Services;
-using System;
+﻿using System;
 using System.Net.Http;
-using System.Numerics;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace IsyZeiterfassungDemo
@@ -23,7 +19,7 @@ namespace IsyZeiterfassungDemo
 
             //Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(data));
 
-            await Call();
+            //await Call();
 
             Console.ReadKey();
         }

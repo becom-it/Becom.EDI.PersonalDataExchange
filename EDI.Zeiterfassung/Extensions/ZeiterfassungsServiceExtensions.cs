@@ -1,6 +1,6 @@
 ﻿using EDI.Zeiterfassung.Model;
 using EDI.Zeiterfassung.Model.Enums;
-using EDI.Zeiterfassung.Service;
+using EDI.Zeiterfassung.ServiceNew;
 using System;
 using System.Collections.Generic;
 
@@ -134,13 +134,13 @@ namespace EDI.Zeiterfassung.Extensions
             return new DateTime(Convert.ToInt32(strDay), Convert.ToInt32(strMonth), Convert.ToInt32(strYear));
         }
 
-        public static long FromDate(this DateTime source)
+        public static int FromDate(this DateTime source)
         {
             var year = source.ToString("yy");
             var month = source.ToString("MM");
             var day = source.ToString("dd");
             if (day.StartsWith("0")) day = day.Substring(1, 1);
-            return Convert.ToInt64($"{day}{month}{year}");
+            return Convert.ToInt32($"{day}{month}{year}");
         }
 
         public static void ErrorHandling(string source, error[] errors)
