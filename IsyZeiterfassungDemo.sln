@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsyZeiterfassungDemo", "IsyZeiterfassungDemo\IsyZeiterfassungDemo.csproj", "{81ABF28F-47E0-49B5-A5E9-326AFFB012DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDI.Zeiterfassung", "EDI.Zeiterfassung\EDI.Zeiterfassung.csproj", "{980DBC47-D33C-410F-9F3A-54F2DF1BA284}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81ABF28F-47E0-49B5-A5E9-326AFFB012DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81ABF28F-47E0-49B5-A5E9-326AFFB012DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81ABF28F-47E0-49B5-A5E9-326AFFB012DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81ABF28F-47E0-49B5-A5E9-326AFFB012DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{980DBC47-D33C-410F-9F3A-54F2DF1BA284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{980DBC47-D33C-410F-9F3A-54F2DF1BA284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{980DBC47-D33C-410F-9F3A-54F2DF1BA284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{980DBC47-D33C-410F-9F3A-54F2DF1BA284}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {731B9632-8AA5-43D9-A9FF-1559E1CC0557}
+	EndGlobalSection
+EndGlobal
