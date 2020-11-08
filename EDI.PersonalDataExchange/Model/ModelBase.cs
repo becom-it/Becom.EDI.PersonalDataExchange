@@ -1,6 +1,6 @@
-﻿using EDI.PersonalDataExchange.Model.Enums;
+﻿using Becom.EDI.PersonalDataExchange.Model.Enums;
 
-namespace EDI.PersonalDataExchange.Model
+namespace Becom.EDI.PersonalDataExchange.Model
 {
     public class ModelBase
     {

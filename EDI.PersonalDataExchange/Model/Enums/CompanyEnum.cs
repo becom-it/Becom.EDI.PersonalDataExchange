@@ -1,4 +1,4 @@
-﻿namespace EDI.PersonalDataExchange.Model.Enums
+﻿namespace Becom.EDI.PersonalDataExchange.Model.Enums
 {
     public enum CompanyEnum
     {

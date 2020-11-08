@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EDI.PersonalDataExchange.Model
+namespace Becom.EDI.PersonalDataExchange.Model
 {
     public class EmployeeInfo : EmployeeBaseInfo
     {

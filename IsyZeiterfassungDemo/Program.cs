@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Becom.EDI.PersonalDataExchange.Model.Enums;
+using Becom.EDI.PersonalDataExchange.Services;
+using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace IsyZeiterfassungDemo
@@ -11,16 +14,38 @@ namespace IsyZeiterfassungDemo
         {
             Console.WriteLine("Hello World!");
 
-            //IZeiterfassungsService service = new ZeiterfassungsService();
+            IZeiterfassungsService service = new ZeiterfassungsService();
 
-            //var data = await service.GetEmployeeInfo(CompanyEnum.Austria, 5555);
+            var info = await service.GetEmployeeInfo(CompanyEnum.Austria, 5555);
+            Console.WriteLine(JsonSerializer.Serialize(info, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
-            //var data = await service.GetEmployeeList(CompanyEnum.Austria);
+            var empList = await service.GetEmployeeList(CompanyEnum.Austria);
+            Console.WriteLine(JsonSerializer.Serialize(empList, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
-            //Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(data));
+            var timeDetails = await service.GetEmployeeTimeDetails(CompanyEnum.Austria, 5555, new DateTime(2020, 10, 1), new DateTime(2020, 10, 30));
+            Console.WriteLine(JsonSerializer.Serialize(timeDetails, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
-            //await Call();
+            var presenceStatus = await service.GetEmployeePresenceStatus(CompanyEnum.Austria, 5555);
+            Console.WriteLine(JsonSerializer.Serialize(presenceStatus, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
+            var checkins = await service.GetEmployeeCheckIns(CompanyEnum.Austria, 5555, new DateTime(2020, 11, 5));
+            Console.WriteLine(JsonSerializer.Serialize(checkins, new JsonSerializerOptions { WriteIndented = true }));
             Console.ReadKey();
         }
 

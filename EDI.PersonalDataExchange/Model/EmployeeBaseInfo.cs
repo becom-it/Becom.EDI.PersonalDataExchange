@@ -1,4 +1,4 @@
-﻿namespace EDI.PersonalDataExchange.Model
+﻿namespace Becom.EDI.PersonalDataExchange.Model
 {
     public class EmployeeBaseInfo : ModelBase
     {
