@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Becom.EDI.PersonalDataExchange.Extensions;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging.Abstractions;
+using Becom.EDI.PersonalDataExchange.Model.Config;
 
 namespace Becom.EDI.PersonalDataExchange.Services
 {
@@ -62,17 +63,13 @@ namespace Becom.EDI.PersonalDataExchange.Services
     {
         private readonly ILogger<ZeiterfassungsService> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly PersonalDataExchangeConfig _config;
 
-        public ZeiterfassungsService()
-        {
-            _logger = new NullLogger<ZeiterfassungsService>();
-            //_httpClientFactory = httpClientFactory;
-        }
-
-        public ZeiterfassungsService(ILogger<ZeiterfassungsService> logger, IHttpClientFactory httpClientFactory)
+        public ZeiterfassungsService(ILogger<ZeiterfassungsService> logger, IHttpClientFactory httpClientFactory, PersonalDataExchangeConfig config)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
+            _config = config;
         }
 
         /// <summary>
