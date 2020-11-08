@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Becom.EDI.PersonalDataExchange.Model.Config
+﻿namespace Becom.EDI.PersonalDataExchange.Model.Config
 {
     public class PersonalDataExchangeConfig
     {

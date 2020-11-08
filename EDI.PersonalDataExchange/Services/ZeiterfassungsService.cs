@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Becom.EDI.PersonalDataExchange.Extensions;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging.Abstractions;
 using Becom.EDI.PersonalDataExchange.Model.Config;
 
 namespace Becom.EDI.PersonalDataExchange.Services
