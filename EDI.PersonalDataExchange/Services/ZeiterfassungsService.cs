@@ -83,17 +83,9 @@ namespace Becom.EDI.PersonalDataExchange.Services
             try
             {
                 _logger.LogInformation($"Loading employee info from webservice with company code {(int)betrieb} and for employeeId {employeeId}...");
-                var xml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:per=""http://WHEDI1/PersonalDataExchange"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                    <per:getPersonal>
-                                        <btrm>company</btrm>
-                                        <pern>employeeid</pern>
-                                    </per:getPersonal>
-                                </soapenv:Body>
-                            </soapenv:Envelope>"
-                .Replace("company", ((int)betrieb).ToString())
-                .Replace("employeeid", ((int)employeeId).ToString());
+                var xml = _config.EmployeeInfoRequest
+                    .Replace("company", ((int)betrieb).ToString())
+                    .Replace("employeeid", ((int)employeeId).ToString());
                 _logger.LogDebug($"Posting request xml: {xml}");
 
                 var result = await callEndpoint(xml);
@@ -325,23 +317,15 @@ namespace Becom.EDI.PersonalDataExchange.Services
         {
             try
             {
-                var endpoint = "http://hitsrvtedi2:20304/PersonalDataExchange";
-
                 var httpContent = new StringContent(xml, Encoding.UTF8, "text/xml");
 
                 _logger.LogDebug("Creating http client...");
-                HttpClient client;
-                if (_httpClientFactory != null)
-                {
-                    client = _httpClientFactory.CreateClient("edi");
-                }
-                else
-                {
-                    client = new HttpClient();
-                }
 
-                _logger.LogDebug($"Calling endpoint with {endpoint}...");
-                var result = await client.PostAsync(endpoint, httpContent);
+                var client = _httpClientFactory.CreateClient("edi");
+
+
+                _logger.LogDebug($"Calling endpoint...");
+                var result = await client.PostAsync("", httpContent);
                 if (result.IsSuccessStatusCode)
                 {
                     return await result.Content.ReadAsStringAsync();
