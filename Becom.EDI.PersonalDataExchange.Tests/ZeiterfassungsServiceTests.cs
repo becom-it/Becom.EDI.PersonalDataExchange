@@ -19,7 +19,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
         public async Task GetEmployeeInfoTest()
         {
             //Arrange
-            var mocks = MockHelpers.GetMocks(RequestContents.GetEmployeeInfoRequestContent());
+            var mocks = MockHelpers.GetMocks(ResponseContents.GetEmployeeInfoResponse());
 
 
             //Act
