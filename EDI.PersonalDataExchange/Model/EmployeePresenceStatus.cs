@@ -6,12 +6,12 @@ namespace Becom.EDI.PersonalDataExchange.Model
     public class EmployeePresenceStatus : ModelBase
     {
         /// <summary>
-        /// Aktuelles Tagesdatum
+        /// Aktuelles Tagesdatum - z1date
         /// </summary>
         public DateTime CurrentDate { get; set; }
 
         /// <summary>
-        /// Kenneichen ob Anwesend oder Abwesend: AN = Anwesend, AB = Abwesend
+        /// Kenneichen ob Anwesend oder Abwesend: AN = Anwesend, AB = Abwesend - z1stat
         /// </summary>
         public PresenceType Type { get; set; }
     }

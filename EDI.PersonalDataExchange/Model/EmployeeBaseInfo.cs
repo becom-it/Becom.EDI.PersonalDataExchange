@@ -3,12 +3,12 @@
     public class EmployeeBaseInfo : ModelBase
     {
         /// <summary>
-        /// Vorname
+        /// Vorname - pnvnam
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Nachname
+        /// Nachname - pnname
         /// </summary>
         public string LastName { get; set; }
     }

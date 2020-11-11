@@ -24,11 +24,26 @@ namespace Becom.EDI.PersonalDataExchange.Services
         Task<EmployeeInfo> GetEmployeeInfo(CompanyEnum betrieb, int employeeId);
 
         /// <summary>
+        /// Es wird der Personalstammsatz zurückgegeben
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <returns>Personalstammsatz</returns>
+        Task<EmployeeInfo> GetEmployeeInfo(int betrieb, int employeeId);
+
+        /// <summary>
         /// Es wird eine Liste der Mitarbeiter ausgegeben
         /// </summary>
         /// <param name="betrieb">Betrieb</param>
         /// <returns></returns>
         Task<List<EmployeeBaseInfo>> GetEmployeeList(CompanyEnum betrieb);
+
+        /// <summary>
+        /// Es wird eine Liste der Mitarbeiter ausgegeben
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <returns></returns>
+        Task<List<EmployeeBaseInfo>> GetEmployeeList(int betrieb);
 
         /// <summary>
         /// Zeiterfassungsdetails in ausgewähltem Zeitraum
@@ -41,12 +56,30 @@ namespace Becom.EDI.PersonalDataExchange.Services
         Task<List<EmployeeTimeDetail>> GetEmployeeTimeDetails(CompanyEnum betrieb, int employeeId, DateTime From, DateTime To);
 
         /// <summary>
+        /// Zeiterfassungsdetails in ausgewähltem Zeitraum
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <param name="From">Datum von</param>
+        /// <param name="To">Datum bis</param>
+        /// <returns>Zeiterfassungsdetails</returns>
+        Task<List<EmployeeTimeDetail>> GetEmployeeTimeDetails(int betrieb, int employeeId, DateTime From, DateTime To);
+
+        /// <summary>
         /// Aktueller Anwesenheitsstatusstatus einer Person. Information kommt live aus Zeiterfassungssystem
         /// </summary>
         /// <param name="betrieb">Betrieb</param>
         /// <param name="employeeId">Personalnummer</param>
         /// <returns>Anwesenheitsstatusstatus</returns>
         Task<EmployeePresenceStatus> GetEmployeePresenceStatus(CompanyEnum betrieb, int employeeId);
+
+        /// <summary>
+        /// Aktueller Anwesenheitsstatusstatus einer Person. Information kommt live aus Zeiterfassungssystem
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <returns>Anwesenheitsstatusstatus</returns>
+        Task<EmployeePresenceStatus> GetEmployeePresenceStatus(int betrieb, int employeeId);
 
         /// <summary>
         /// Gibt eine Liste mit allen Statusänderungen an einem Tag zurück
@@ -56,6 +89,15 @@ namespace Becom.EDI.PersonalDataExchange.Services
         /// <param name="ForDate">Abgfrage Datum</param>
         /// <returns>Liste mit allen Statusänderungen an einem Tag</returns>
         Task<List<EmployeeCheckIn>> GetEmployeeCheckIns(CompanyEnum betrieb, int employeeId, DateTime ForDate);
+
+        /// <summary>
+        /// Gibt eine Liste mit allen Statusänderungen an einem Tag zurück
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <param name="ForDate">Abgfrage Datum</param>
+        /// <returns>Liste mit allen Statusänderungen an einem Tag</returns>
+        Task<List<EmployeeCheckIn>> GetEmployeeCheckIns(int betrieb, int employeeId, DateTime ForDate);
     }
 
     public class ZeiterfassungsService : IZeiterfassungsService
@@ -71,20 +113,29 @@ namespace Becom.EDI.PersonalDataExchange.Services
             _config = config;
         }
 
+        #region EmployeeInfo
         /// <summary>
         /// Es wird der Personalstammsatz zurückgegeben
         /// </summary>
         /// <param name="betrieb">Betrieb</param>
         /// <param name="employeeId">Personalnummer</param>
         /// <returns>Personalstammsatz</returns>
-        public async Task<EmployeeInfo> GetEmployeeInfo(CompanyEnum betrieb, int employeeId)
+        public async Task<EmployeeInfo> GetEmployeeInfo(CompanyEnum betrieb, int employeeId) => await GetEmployeeInfo((int)betrieb, employeeId);
+
+        /// <summary>
+        /// Es wird der Personalstammsatz zurückgegeben
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <returns>Personalstammsatz</returns>
+        public async Task<EmployeeInfo> GetEmployeeInfo(int betrieb, int employeeId)
         {
             try
             {
                 _logger.LogInformation($"Loading employee info from webservice with company code {(int)betrieb} and for employeeId {employeeId}...");
                 var xml = _config.EmployeeInfoRequest
-                    .Replace("company", ((int)betrieb).ToString())
-                    .Replace("employeeid", ((int)employeeId).ToString());
+                    .Replace("company", betrieb.ToString())
+                    .Replace("employeeid", employeeId.ToString());
                 _logger.LogDebug($"Posting request xml: {xml}");
 
                 var result = await callEndpoint(xml);
@@ -113,26 +164,28 @@ namespace Becom.EDI.PersonalDataExchange.Services
                 throw new Exception($"Error calling GetEmployeeInfo (getPersonal): {ex.Message}", ex);
             }
         }
+        #endregion
+
+        #region EmployeeList
+        /// <summary>
+        /// Es wird eine Liste der Mitarbeiter ausgegeben
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <returns></returns>
+        public async Task<List<EmployeeBaseInfo>> GetEmployeeList(CompanyEnum betrieb) => await GetEmployeeList((int)betrieb);
 
         /// <summary>
         /// Es wird eine Liste der Mitarbeiter ausgegeben
         /// </summary>
         /// <param name="betrieb">Betrieb</param>
         /// <returns></returns>
-        public async Task<List<EmployeeBaseInfo>> GetEmployeeList(CompanyEnum betrieb)
+        public async Task<List<EmployeeBaseInfo>> GetEmployeeList(int betrieb)
         {
             try
             {
                 _logger.LogInformation($"Loading employees from webservice with company code {(int)betrieb}...");
-                var xml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:per=""http://WHEDI1/PersonalDataExchange"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                    <per:getPersonalList>
-                                        <btrm>company</btrm>
-                                    </per:getPersonalList>
-                                </soapenv:Body>
-                            </soapenv:Envelope>"
-                .Replace("company", ((int)betrieb).ToString());
+                var xml = _config.EmployeeListRequest
+                    .Replace("company", betrieb.ToString());
                 _logger.LogDebug($"Posting request xml: {xml}");
 
                 var result = await callEndpoint(xml);
@@ -154,6 +207,18 @@ namespace Becom.EDI.PersonalDataExchange.Services
                 throw new Exception($"Error calling GetEmployeeList (getPersonalList): {ex.Message}", ex);
             }
         }
+        #endregion
+
+        #region EmployeeTimeDetails
+        /// <summary>
+        /// Zeiterfassungsdetails in ausgewähltem Zeitraum
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <param name="From">Datum von</param>
+        /// <param name="To">Datum bis</param>
+        /// <returns>Zeiterfassungsdetails</returns>
+        public async Task<List<EmployeeTimeDetail>> GetEmployeeTimeDetails(CompanyEnum betrieb, int employeeId, DateTime From, DateTime To) => await GetEmployeeTimeDetails((int)betrieb, employeeId, From, To);
 
         /// <summary>
         /// Zeiterfassungsdetails in ausgewähltem Zeitraum
@@ -163,24 +228,13 @@ namespace Becom.EDI.PersonalDataExchange.Services
         /// <param name="From">Datum von</param>
         /// <param name="To">Datum bis</param>
         /// <returns>Zeiterfassungsdetails</returns>
-        public async Task<List<EmployeeTimeDetail>> GetEmployeeTimeDetails(CompanyEnum betrieb, int employeeId, DateTime From, DateTime To)
+        public async Task<List<EmployeeTimeDetail>> GetEmployeeTimeDetails(int betrieb, int employeeId, DateTime From, DateTime To)
         {
             try
             {
                 _logger.LogInformation($"Loading employees time details from webservice with company code {(int)betrieb} and employeeId {employeeId} between {From.ToShortDateString()} and {To.ToShortDateString()}...");
-                var xml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:per=""http://WHEDI1/PersonalDataExchange"">
-                               <soapenv:Header/>
-                               <soapenv:Body>
-                                  <per:getZeiterfassung>
-                                     <btrm>company</btrm>
-                                     <pern>employeeid</pern>
-                                     <datv>fromdate</datv>
-                                     <datb>todate</datb>
-                                     <sart>1</sart>
-                                  </per:getZeiterfassung>
-                               </soapenv:Body>
-                            </soapenv:Envelope>"
-                .Replace("company", ((int)betrieb).ToString())
+                var xml = _config.EmployeeTimeDetailsRequest
+                .Replace("company", (betrieb).ToString())
                 .Replace("employeeid", employeeId.ToString())
                 .Replace("fromdate", From.FromDate())
                 .Replace("todate", To.FromDate());
@@ -218,28 +272,24 @@ namespace Becom.EDI.PersonalDataExchange.Services
                 throw new Exception($"Error calling GetEmployeeTimeDetails (getZeiterfassung): {ex.Message}", ex);
             }
         }
+        #endregion
 
+        #region EmployeePresenceStatus
         /// <summary>
         /// Aktueller Anwesenheitsstatusstatus einer Person. Information kommt live aus Zeiterfassungssystem
         /// </summary>
         /// <param name="betrieb">Betrieb</param>
         /// <param name="employeeId">Personalnummer</param>
         /// <returns>Anwesenheitsstatusstatus</returns>
-        public async Task<EmployeePresenceStatus> GetEmployeePresenceStatus(CompanyEnum betrieb, int employeeId)
+        public async Task<EmployeePresenceStatus> GetEmployeePresenceStatus(CompanyEnum betrieb, int employeeId) => await GetEmployeePresenceStatus((int)betrieb, employeeId);
+
+        public async Task<EmployeePresenceStatus> GetEmployeePresenceStatus(int betrieb, int employeeId)
         {
             try
             {
                 _logger.LogInformation($"Loading employees presence status from webservice with company code {(int)betrieb} and employeeId {employeeId}...");
-                var xml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:per=""http://WHEDI1/PersonalDataExchange"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                    <per:getPersonalStatus>
-                                        <btrm>company</btrm>
-                                        <pern>employeeid</pern>
-                                    </per:getPersonalStatus>
-                                </soapenv:Body>
-                            </soapenv:Envelope>"
-                .Replace("company", ((int)betrieb).ToString())
+                var xml = _config.EmployeePresenceStatusRequest
+                .Replace("company", (betrieb).ToString())
                 .Replace("employeeid", employeeId.ToString());
                 _logger.LogDebug($"Posting request xml: {xml}");
 
@@ -262,6 +312,17 @@ namespace Becom.EDI.PersonalDataExchange.Services
                 throw new Exception($"Error calling GetEmployeePresenceStatus (getPersonalStatus): {ex.Message}", ex);
             }
         }
+        #endregion
+
+        #region EmployeeCheckIns
+        /// <summary>
+        /// Gibt eine Liste mit allen Statusänderungen an einem Tag zurück
+        /// </summary>
+        /// <param name="betrieb">Betrieb</param>
+        /// <param name="employeeId">Personalnummer</param>
+        /// <param name="ForDate">Abgfrage Datum</param>
+        /// <returns>Liste mit allen Statusänderungen an einem Tag</returns>
+        public async Task<List<EmployeeCheckIn>> GetEmployeeCheckIns(CompanyEnum betrieb, int employeeId, DateTime ForDate) => await GetEmployeeCheckIns((int)betrieb, employeeId, ForDate);
 
         /// <summary>
         /// Gibt eine Liste mit allen Statusänderungen an einem Tag zurück
@@ -270,22 +331,13 @@ namespace Becom.EDI.PersonalDataExchange.Services
         /// <param name="employeeId">Personalnummer</param>
         /// <param name="ForDate">Abgfrage Datum</param>
         /// <returns>Liste mit allen Statusänderungen an einem Tag</returns>
-        public async Task<List<EmployeeCheckIn>> GetEmployeeCheckIns(CompanyEnum betrieb, int employeeId, DateTime ForDate)
+        public async Task<List<EmployeeCheckIn>> GetEmployeeCheckIns(int betrieb, int employeeId, DateTime ForDate)
         {
             try
             {
                 _logger.LogInformation($"Loading employees checkins from webservice with company code {(int)betrieb} and employeeId {employeeId} for {ForDate.ToShortDateString()}...");
-                var xml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:per=""http://WHEDI1/PersonalDataExchange"">
-                               <soapenv:Header/>
-                               <soapenv:Body>
-                                  <per:getPersonalStatusList>
-                                     <btrm>company</btrm>
-                                     <pern>employeeid</pern>
-                                     <date>fordate</date>
-                                  </per:getPersonalStatusList>
-                               </soapenv:Body>
-                            </soapenv:Envelope>"
-                .Replace("company", ((int)betrieb).ToString())
+                var xml = _config.EmployeeCheckInsRequest
+                .Replace("company", (betrieb).ToString())
                 .Replace("employeeid", employeeId.ToString())
                 .Replace("fordate", ForDate.FromDate());
                 _logger.LogDebug($"Posting request xml: {xml}");
@@ -311,6 +363,7 @@ namespace Becom.EDI.PersonalDataExchange.Services
                 throw new Exception($"Error calling GetEmployeeCheckIns (getPersonalStatusList): {ex.Message}", ex);
             }
         }
+        #endregion
 
         private async Task<string> callEndpoint(string xml)
         {

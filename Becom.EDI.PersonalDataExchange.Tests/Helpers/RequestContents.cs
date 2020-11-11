@@ -27,9 +27,9 @@
             return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:per=\"http://WHEDI1/PersonalDataExchange\"><soapenv:Header/><soapenv:Body><per:getZeiterfassung><btrm>company</btrm><pern>employeeid</pern><datv>fromdate</datv><datb>todate</datb><sart>1</sart></per:getZeiterfassung></soapenv:Body></soapenv:Envelope>";
         }
 
-        public static string GetEmployeeTimeDetailsRequestContent()
+        public static string GetEmployeeTimeDetailsRequestContent(string fromdate, string todate)
         {
-            return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:per=\"http://WHEDI1/PersonalDataExchange\"><soapenv:Header/><soapenv:Body><per:getZeiterfassung><btrm>1</btrm><pern>5555</pern><datv>fromdate</datv><datb>todate</datb><sart>1</sart></per:getZeiterfassung></soapenv:Body></soapenv:Envelope>";
+            return $"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:per=\"http://WHEDI1/PersonalDataExchange\"><soapenv:Header/><soapenv:Body><per:getZeiterfassung><btrm>1</btrm><pern>5555</pern><datv>{fromdate }</datv><datb>{todate}</datb><sart>1</sart></per:getZeiterfassung></soapenv:Body></soapenv:Envelope>";
         }
 
         public static string GetEmployeePresenceStatusRequestConfig()
@@ -49,7 +49,7 @@
 
         public static string GetEmployeeCheckInsRequestContent()
         {
-            return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:per=\"http://WHEDI1/PersonalDataExchange\"><soapenv:Header/><soapenv:Body><per:getPersonalStatusList><btrm>1</btrm><pern>5555</pern><date>fordate</date></per:getPersonalStatusList></soapenv:Body></soapenv:Envelope>";
+            return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:per=\"http://WHEDI1/PersonalDataExchange\"><soapenv:Header/><soapenv:Body><per:getPersonalStatusList><btrm>1</btrm><pern>5555</pern><date>5112020</date></per:getPersonalStatusList></soapenv:Body></soapenv:Envelope>";
         }
     }
 }
