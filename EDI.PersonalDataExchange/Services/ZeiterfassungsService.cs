@@ -159,6 +159,10 @@ namespace Becom.EDI.PersonalDataExchange.Services
                         HolidayUsed = x.ToInt("pnurlv")
                     }).FirstOrDefault();
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new Exception($"Error calling GetEmployeeInfo (getPersonal): {ex.Message}", ex);
@@ -201,6 +205,10 @@ namespace Becom.EDI.PersonalDataExchange.Services
                         FirstName = x.Element(x.Name.Namespace + "pnvnam").Value.Trim(),
                         LastName = x.Element(x.Name.Namespace + "pnname").Value.Trim(),
                     }).ToList();
+            }
+            catch (ArgumentException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -267,6 +275,10 @@ namespace Becom.EDI.PersonalDataExchange.Services
                         TimeType = (int)x.Element(x.Name.Namespace + "zesart")
                     }).ToList();
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new Exception($"Error calling GetEmployeeTimeDetails (getZeiterfassung): {ex.Message}", ex);
@@ -306,6 +318,10 @@ namespace Becom.EDI.PersonalDataExchange.Services
                         CurrentDate = x.ToDate2("z1date"),
                         Type = x.Element(x.Name.Namespace + "z1stat").Value == "AN" ? PresenceType.AN : PresenceType.AB
                     }).FirstOrDefault();
+            }
+            catch (ArgumentException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -358,6 +374,10 @@ namespace Becom.EDI.PersonalDataExchange.Services
                         AbsenceType = x.Element(x.Name.Namespace + "z1aht1").Value
                     }).ToList();
             }
+            catch(ArgumentException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new Exception($"Error calling GetEmployeeCheckIns (getPersonalStatusList): {ex.Message}", ex);
@@ -367,6 +387,7 @@ namespace Becom.EDI.PersonalDataExchange.Services
 
         private async Task<string> callEndpoint(string xml)
         {
+            var resultString = string.Empty;
             try
             {
                 var httpContent = new StringContent(xml, Encoding.UTF8, "text/xml");
@@ -380,7 +401,7 @@ namespace Becom.EDI.PersonalDataExchange.Services
                 var result = await client.PostAsync("", httpContent);
                 if (result.IsSuccessStatusCode)
                 {
-                    return await result.Content.ReadAsStringAsync();
+                    resultString = await result.Content.ReadAsStringAsync();
                 }
                 else
                 {
@@ -390,6 +411,26 @@ namespace Becom.EDI.PersonalDataExchange.Services
             catch (Exception ex)
             {
                 throw new Exception($"Error calling endpoint: {ex.Message}", ex);
+            }
+
+            //Prüfem auf Fehler
+            checkForError(resultString);
+
+            return resultString;
+        }
+
+        private void checkForError(string content)
+        {
+            XDocument doc = XDocument.Parse(content);
+            var errors = doc.Descendants().Where(x => x.Name.LocalName == "errors")
+                .Select(x => new ErrorResponse
+                {
+                    ErrorCode = x.ToInt("erco"),
+                    ErrorText = x.Element(x.Name.Namespace + "ertx").Value.Trim()
+                });
+            if(errors.Count() > 0)
+            {
+                throw new ArgumentException($"Error {errors.First().ErrorText}", new PersonalDataExchangeException(errors.First()));
             }
         }
     }

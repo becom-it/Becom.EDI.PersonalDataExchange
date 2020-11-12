@@ -41,7 +41,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent(1, 5555))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -68,7 +68,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent(1, 5555))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -87,7 +87,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent(789, 5555))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -106,7 +106,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent(1, 1234))),
                 ItExpr.IsAny<CancellationToken>());
         }
         #endregion
@@ -137,7 +137,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeListRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeListRequestContent(1))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -166,7 +166,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeListRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeListRequestContent(1))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -185,7 +185,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeInfoRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeListRequestContent(789))),
                 ItExpr.IsAny<CancellationToken>());
         }
         #endregion
@@ -202,12 +202,23 @@ namespace Becom.EDI.PersonalDataExchange.Tests
 
             var list = await service.GetEmployeeTimeDetails(CompanyEnum.Austria, 5555, new DateTime(2020, 10, 1), new DateTime(2020, 10, 30));
 
-            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await service.GetEmployeeTimeDetails(789, 5555, new DateTime(2020, 10, 1), new DateTime(2020, 10, 30)));
+            list.Should().BeOfType<List<EmployeeTimeDetail>>();
+            list.Count.Should().Be(30);
+
+            list.First().GrossWorktime.Should().Be(TimeSpan.FromMinutes(519));
+            list.First().TargetWorktime.Should().Be(TimeSpan.FromMinutes(492));
+            list.First().NetWorktime.Should().Be(TimeSpan.FromMinutes(519));
+            list.First().NetWorktimeDifference.Should().Be(TimeSpan.FromMinutes(27));
+
+            list.Last().GrossWorktime.Should().Be(TimeSpan.FromMinutes(362));
+            list.Last().TargetWorktime.Should().Be(TimeSpan.FromMinutes(342));
+            list.Last().NetWorktime.Should().Be(TimeSpan.FromMinutes(362));
+            list.Last().NetWorktimeDifference.Should().Be(TimeSpan.FromMinutes(20));
 
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent("1102020", "30102020"))),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent(1, 5555, "1102020", "30102020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -238,7 +249,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent("1102020", "30102020"))),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent(1, 5555, "1102020", "30102020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -256,7 +267,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent("1102020", "30102020"))),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent(789, 5555, "1102020", "30102020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -274,7 +285,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent("1102015", "30102015"))),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent(1, 5555, "1102015", "30102015"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -292,7 +303,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent("1102020", "30102020"))),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeTimeDetailsRequestContent(1, 1234, "1102020", "30102020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
         #endregion
@@ -317,7 +328,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent(1, 5555))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -340,7 +351,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent(1, 5555))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -358,7 +369,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent(789, 5555))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -376,7 +387,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeePresenceStatusRequestContent(1, 1234))),
                 ItExpr.IsAny<CancellationToken>());
         }
         #endregion
@@ -406,7 +417,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent(1, 5555, "5112020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -434,7 +445,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent(1, 5555, "5112020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -452,7 +463,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent(789, 5555, "5112020"))),
                 ItExpr.IsAny<CancellationToken>());
         }      
 
@@ -470,7 +481,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent(1, 5555, "5112015"))),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -488,7 +499,7 @@ namespace Becom.EDI.PersonalDataExchange.Tests
             mocks.mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent())),
+                ItExpr.Is<HttpRequestMessage>(req => req.CheckRequest(mocks.config.Endpoint, RequestContents.GetEmployeeCheckInsRequestContent(1, 1234, "5112020"))),
                 ItExpr.IsAny<CancellationToken>());
         }
         #endregion
